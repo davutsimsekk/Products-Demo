@@ -23,11 +23,10 @@ public class CreateProductRequest {
     @NotEmpty
     @Size(max = 50)
     private String category;
-    @Size(min = 10, max = 2000)
+    @Size(min = 10, max = 2500)
     private String description;
     @Min(0)
     private double price;
 
     private MultipartFile imageFile;
-
 }

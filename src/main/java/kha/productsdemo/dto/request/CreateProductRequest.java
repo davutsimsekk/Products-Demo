@@ -15,15 +15,15 @@ import java.time.LocalDateTime;
 @ToString
 public class CreateProductRequest {
     @NotEmpty
-    @Size(max = 30)
+    @Size(max = 100)
     private String name;
     @NotEmpty
-    @Size(max = 30)
+    @Size(max = 50)
     private String brand;
     @NotEmpty
-    @Size(max = 30)
+    @Size(max = 50)
     private String category;
-    @Size(min = 10, max = 500)
+    @Size(min = 10, max = 2000)
     private String description;
     @Min(0)
     private double price;

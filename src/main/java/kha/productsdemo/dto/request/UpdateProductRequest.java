@@ -11,16 +11,16 @@ import org.springframework.web.multipart.MultipartFile;
 public class UpdateProductRequest {
     private String id;
     @NotEmpty
-    @Size(max = 30)
+    @Size(max = 100)
     private String name;
     @NotEmpty
-    @Size(max = 30)
+    @Size(max = 50)
     private String brand;
     @NotEmpty
-    @Size(max = 30)
+    @Size(max = 100)
     private String category;
     @NotEmpty
-    @Size(min = 10, max = 500)
+    @Size(min = 10, max = 2500)
     private String description;
     @Min(0)
     private double price;

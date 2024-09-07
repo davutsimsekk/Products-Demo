@@ -81,17 +81,7 @@ public class ProductService {
                 .collect(Collectors.toList());
         return products;
     }
-    public CreateProductRequest convertToCreateProductRequestFromCreateProductRequest2(
-            CreateProductRequest2 request2
-            , MultipartFile image){
-        return converterCreateProductsRequest.converterFromCreateProductRequest2ToCreateProductRequest(request2, image);
-    }
-    public UpdateProductRequest convertToUpdateProductRequestFromCreateProductRequest2(
-            CreateProductRequest2 request2
-            , MultipartFile image){
-        return convertToUpdateProductRequestFromCreateProductRequest2(request2, image);
-    }
-
+    
     public ShowProductResponse updateProduct(UpdateProductRequest request)throws ProductNotFoundException{
         Product product =
                 converterUpdateProductRequest

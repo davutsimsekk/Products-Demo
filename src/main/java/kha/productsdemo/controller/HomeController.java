@@ -72,7 +72,7 @@ public class HomeController {
 
     @PostMapping("/createProduct")
     public String createProduct(@Valid @ModelAttribute("product") CreateProductRequest product,
-                                BindingResult result, Model model) {
+                                BindingResult result) {
 
         if(product.getImageFile().isEmpty()){
             result.addError(

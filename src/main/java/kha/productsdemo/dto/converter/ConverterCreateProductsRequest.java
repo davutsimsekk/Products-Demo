@@ -26,6 +26,4 @@ public class ConverterCreateProductsRequest {
         product.setCreatedDate(new Date());
         return  product;
     }
-
-
 }

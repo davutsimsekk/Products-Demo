@@ -1,14 +1,9 @@
 package kha.productsdemo.dto.converter;
 
-import kha.productsdemo.dto.request.CreateProductRequest;
-import kha.productsdemo.dto.request.CreateProductRequest2;
 import kha.productsdemo.dto.request.UpdateProductRequest;
 import kha.productsdemo.entity.Product;
 import kha.productsdemo.repository.ProductRepository;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @Component
 public class ConverterUpdateProductRequest {

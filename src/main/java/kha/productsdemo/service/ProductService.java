@@ -4,7 +4,6 @@ import kha.productsdemo.dto.converter.ConverterCreateProductsRequest;
 import kha.productsdemo.dto.converter.ConverterShowProductConverter;
 import kha.productsdemo.dto.converter.ConverterUpdateProductRequest;
 import kha.productsdemo.dto.request.CreateProductRequest;
-import kha.productsdemo.dto.request.CreateProductRequest2;
 import kha.productsdemo.dto.request.UpdateProductRequest;
 import kha.productsdemo.dto.response.ShowProductResponse;
 import kha.productsdemo.entity.Product;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 

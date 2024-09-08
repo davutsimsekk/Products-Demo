@@ -1,7 +1,6 @@
 package kha.productsdemo.dto.converter;
 
 import kha.productsdemo.dto.request.CreateProductRequest;
-import kha.productsdemo.dto.request.CreateProductRequest2;
 import kha.productsdemo.entity.Product;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,18 +26,4 @@ public class ConverterCreateProductsRequest {
         product.setCreatedDate(new Date());
         return  product;
     }
-
-    public CreateProductRequest converterFromCreateProductRequest2ToCreateProductRequest(
-            CreateProductRequest2 request2
-            , MultipartFile image){
-        CreateProductRequest request = new CreateProductRequest();
-        request.setName(request2.getName());
-        request.setBrand(request2.getBrand());
-        request.setImageFile(request.getImageFile());
-        request.setPrice(request2.getPrice());
-        request.setCategory(request2.getCategory());
-        request.setDescription(request2.getDescription());
-        return  request;
-    }
-
 }

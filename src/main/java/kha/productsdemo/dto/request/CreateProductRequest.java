@@ -15,17 +15,16 @@ import org.springframework.web.multipart.MultipartFile;
 @ToString
 public class CreateProductRequest {
     @NotEmpty
-    @Max(100)
-    @Min(10)
+    @Size(max = 100)
     private String name;
 
-    @Max(50)
+    @NotEmpty
+    @Size(max = 50)
     private String brand;
     @NotEmpty
-    @Max(100)
+    @Size(max = 100)
     private String category;
-    @Min(10)
-    @Max(2500)
+    @Size(min = 10, max = 2500)
     private String description;
     @Min(0)
     private double price;

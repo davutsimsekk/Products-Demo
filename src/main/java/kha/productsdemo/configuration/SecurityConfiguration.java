@@ -1,0 +1,66 @@
+package kha.productsdemo.configuration;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfiguration {
+
+    private final UserDetailsService userDetailsService;
+
+    public SecurityConfiguration(UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+        httpSecurity
+                .csrf(csrf-> csrf.disable())
+                .cors(cors-> cors.disable())
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/products/**",
+                                "/home", "/register/**",  "/css/**", "/js/**")
+                        .permitAll()
+                        .requestMatchers("/register").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/public/**").permitAll()
+                        .requestMatchers("/public/productImages").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin((form) -> form
+                        .loginPage("/login")
+                        .usernameParameter("email")
+                        .defaultSuccessUrl("/home", true)
+                        .permitAll()
+                )
+                .logout(
+                        logout -> logout
+                                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                                .logoutSuccessUrl("/home")
+                                .deleteCookies("JSESSIONID")
+                                .invalidateHttpSession(true)
+                                .permitAll());
+        return httpSecurity.build();
+    }
+    @Bean
+    public static PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder managerBuilder) throws Exception{
+        managerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+
+}

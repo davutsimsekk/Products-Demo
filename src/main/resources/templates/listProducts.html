@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<html lang="tr" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
 
 </head>
 <body>
@@ -14,6 +16,9 @@
         <div class="container d-flex justify-content-between">
             <a href="/products/listProducts" class="navbar-brand d-flex align-items-center">
                 <strong>Product List</strong>
+            </a>
+            <a href="/home" class="navbar-brand d-flex align-items-center">
+                <strong>Home Page</strong>
             </a>
             <a href="/products/cart" class="d-flex align-items-center">
                 <i class="bi bi-cart" style="font-size: 1.5rem; color: white;"></i>
@@ -30,7 +35,7 @@
             <div class="container">
                 <div class="row mb-4">
                     <div class="col">
-                        <a href="/products/createProduct" class="btn btn-primary">Create Product</a>
+                        <a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin/createProduct" class="btn btn-primary">Create Product</a>
                     </div>
                 </div>
             </div>
@@ -48,15 +53,15 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <div class="col" th:each="product : ${products}">
                     <div class="card shadow-sm">
-                        <img th:src="@{'/productImages/' + ${product.imageName}}" class="card-img-top" alt="Product Image" width="250" height="400">
+                        <img th:src="@{'/productImages/' + ${product.imageName}}" class="card-img-top product-image" alt="Product Image">
                         <div class="card-body">
                             <h5 class="card-title" th:text="${product.name}">Product Name</h5>
                             <p class="card-text" th:text="${product.description}">Product Description</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <a th:href="@{'/products/listProducts/' + ${product.id}}" class="btn btn-sm btn-outline-secondary">Show Product</a>
-                                    <form th:action="@{'/products/listProducts/' + ${product.id} + '/delete'}" method="post" onsubmit="return confirm('Are you sure delete this product?');">
-                                        <button type="submit" class="btn btn-sm btn-outline-danger">Sil</button>
+                                    <form sec:authorize="hasRole('ROLE_ADMIN')"  th:action="@{'/products/listProducts/' + ${product.id} + '/delete'}" method="post" onsubmit="return confirm('Are you sure delete this product?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                                     </form>
                                 </div>
                                 <small class="text-muted" th:text="${'Price: ' + product.price + ' $'}">Price</small>

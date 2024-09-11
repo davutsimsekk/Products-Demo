@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Kayıt Ol</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Register Form</h2>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/register}" method="post" th:object="${createUserRequest}">
+                        <div class="form-group">
+                            <label for="userName">Username:</label>
+                            <input type="text" class="form-control" id="userName" name="userName" th:field="*{userName}">
+                            <p th:if="${#fields.hasErrors('userName')}" th:errorclass="text-danger"
+                               th:errors="${createUserRequest.userName}"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" th:field="*{email}">
+                            <p th:if="${#fields.hasErrors('email')}" th:errorclass="text-danger"
+                               th:errors="${createUserRequest.email}"></p>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" class="form-control" id="password" name="password">
+                            <p th:if="${#fields.hasErrors('password')}" th:errorclass="text-danger"
+                               th:errors="${createUserRequest.password}"></p>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <a th:href="@{/login}">You have already an account? Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products/listProducts">All Products</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container mt-5">
+    <h1>Your Cart</h1>
+    <table class="table table-striped mt-4">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Id</th>
+            <th scope="col">User</th>
+            <th scope="col">Email</th>
+            <th scope="col">Roles</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user, userStat: ${users}">
+            <th scope="row" th:text="${userStat.index + 1}">1</th>
+            <td th:text="${user.id}">Id</td>
+            <td th:text="${user.username}">Name</td>
+            <td th:text="${user.email}">Email</td>
+            <td>
+                <ul>
+                    <li th:each="role : ${user.getRoles()}" th:text="${role}"></li>
+                </ul>
+            </td>
+
+        <td>
+                <form th:action="@{'/admin/deleteUser'}" method="post">
+                    <input type="hidden" name="id" th:value="${user.id}" />
+                    <button type="submit">Delete User</button>
+                </form>
+                <form th:action="@{'/admin/makeAdmin'}" method="post">
+                    <input type="hidden" name="id" th:value="${user.id}" />
+                    <button type="submit">Make Admin</button>
+                </form>
+                <form th:action="@{'/admin/dropAdmin'}" method="post">
+                    <input type="hidden" name="id" th:value="${user.id}" />
+                    <button type="submit">Drop Admin</button>
+                </form>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

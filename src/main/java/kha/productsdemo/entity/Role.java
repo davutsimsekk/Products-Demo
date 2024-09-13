@@ -1,12 +1,13 @@
 package kha.productsdemo.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
 
-import java.util.List;
+public enum Role implements GrantedAuthority {
+    ROLE_USER,
+    ROLE_ADMIN;
 
-
-public enum Role {
-    USER, ADMIN
-
+    @Override
+    public String getAuthority() {
+        return name();
+    }
 }

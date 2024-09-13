@@ -50,13 +50,16 @@ public class SecurityConfiguration {
                                 .logoutSuccessUrl("/home")
                                 .deleteCookies("JSESSIONID")
                                 .invalidateHttpSession(true)
-                                .permitAll());
+                                .permitAll()
+                                )
+                .userDetailsService(userDetailsService);
         return httpSecurity.build();
     }
     @Bean
     public static PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder managerBuilder) throws Exception{

@@ -68,12 +68,12 @@ public class ProductController {
     }
 
     @PostMapping("/listProducts/{id}/removeFromCart")
-    public String removeProductFromCart(@RequestParam String productId){
+    public String removeProductFromCart(@RequestParam String productId, @PathVariable String id){
         productService.deleteProductFromCart(productId);
         return "redirect:/products/cart";
     }
     @PostMapping("/listProducts/{id}/updateCart")
-    public String updateProductCartQuantity(@RequestParam String productId, @RequestParam int quantity){
+    public String updateProductCartQuantity(@RequestParam String productId, @RequestParam int quantity, @PathVariable String id){
         productService.updateProductCartQuantity(productId, quantity);
         return "redirect:/products/cart";
     }

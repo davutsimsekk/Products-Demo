@@ -1,16 +1,18 @@
 package kha.productsdemo.service;
 
 
-import kha.productsdemo.dto.converter.ConverterShowUserAccount;
-import kha.productsdemo.dto.converter.ConverterShowUserResponse;
-import kha.productsdemo.dto.converter.CreateUserRequestConverter;
+import kha.productsdemo.dto.converter.*;
 import kha.productsdemo.dto.request.CreateUserRequest;
+import kha.productsdemo.dto.request.UpdateProductRequest;
+import kha.productsdemo.dto.request.UpdateUserRequest;
 import kha.productsdemo.dto.response.ShowUserAccount;
 import kha.productsdemo.dto.response.ShowUserResponse;
 import kha.productsdemo.entity.Role;
 import kha.productsdemo.entity.User;
 import kha.productsdemo.repository.UserRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,12 +27,17 @@ public class UserService {
     private final CreateUserRequestConverter userRequestConverter;
     private final ConverterShowUserResponse converterShowUserResponse;
     private final ConverterShowUserAccount converterShowUserAccount;
-    public UserService(UserRepository userRepository, CreateUserRequestConverter userRequestConverter, ConverterShowUserResponse converterShowUserResponse, ConverterShowUserAccount converterShowUserAccount) {
+    private final ConverterUpdateProductRequest converterUpdateProductRequest;
+    private final ConverterUpdateUserRequest converterUpdateUserRequest;
+
+    public UserService(UserRepository userRepository, CreateUserRequestConverter userRequestConverter, ConverterShowUserResponse converterShowUserResponse, ConverterShowUserAccount converterShowUserAccount, ConverterUpdateProductRequest converterUpdateProductRequest, ConverterUpdateUserRequest converterUpdateUserRequest) {
         this.userRepository = userRepository;
         this.userRequestConverter = userRequestConverter;
 
         this.converterShowUserResponse = converterShowUserResponse;
         this.converterShowUserAccount = converterShowUserAccount;
+        this.converterUpdateProductRequest = converterUpdateProductRequest;
+        this.converterUpdateUserRequest = converterUpdateUserRequest;
     }
 
     public void createUser(CreateUserRequest createUserRequest){
@@ -96,6 +103,27 @@ public class UserService {
 
     public User findUserByEmail(String email){
         return userRepository.findUserByEmail(email);
+    }
+
+    public User convertFromAuthenticationToUser(Authentication authentication){
+        if (authentication != null && authentication.isAuthenticated()) {
+            org.springframework.security.core.userdetails.User springUser
+                    = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
+            User user = findUserByEmail(springUser.getUsername());
+            return user;
+        }
+        return null;
+    }
+
+    public UpdateUserRequest convertFromUserToUpdateProductRequest(User user){
+        UpdateUserRequest updateUserRequest
+                = converterUpdateUserRequest.convertFromUserToUpdateUserRequest(user);
+        return updateUserRequest;
+    }
+
+    public void updateUser(UpdateUserRequest from, User to){
+        to = converterUpdateUserRequest.convertFromUpdateUserRequestToUser(from, to);
+        userRepository.save(to);
     }
 
 

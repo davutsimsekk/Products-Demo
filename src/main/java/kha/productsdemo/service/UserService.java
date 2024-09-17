@@ -2,6 +2,7 @@ package kha.productsdemo.service;
 
 
 import kha.productsdemo.dto.converter.*;
+import kha.productsdemo.dto.request.ChangePasswordRequest;
 import kha.productsdemo.dto.request.CreateUserRequest;
 import kha.productsdemo.dto.request.UpdateProductRequest;
 import kha.productsdemo.dto.request.UpdateUserRequest;
@@ -131,10 +132,23 @@ public class UserService {
         return userRepository.save(to);
     }
 
-    public Authentication createNewAuthentication(String username){
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+    public Authentication createNewAuthentication(User user){
+        UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
+
+    public void changePassword(User user, ChangePasswordRequest changePasswordRequest){
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+        User updatedUser = userRepository.save(user);
+        updateAuthentication(updatedUser);
+    }
+    public void updateAuthentication(User user){
+        Authentication authentication = createNewAuthentication(user);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    }
+
 
 
 

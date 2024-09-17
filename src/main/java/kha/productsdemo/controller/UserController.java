@@ -1,5 +1,7 @@
 package kha.productsdemo.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kha.productsdemo.dto.request.UpdateProductRequest;
 import kha.productsdemo.dto.request.UpdateUserRequest;
@@ -8,6 +10,9 @@ import kha.productsdemo.entity.User;
 import kha.productsdemo.service.UserService;
 import org.springframework.security.core.Authentication;
 
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,12 +65,15 @@ public class UserController {
             return "editProfile";
         }
         User user = userService.convertFromAuthenticationToUser(authentication);
-        userService.updateUser(updateUserRequest, user);
+        User updatedUser = userService.updateUser(updateUserRequest, user);
+        Authentication newAuth = userService.createNewAuthentication(updatedUser.getUsername());
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+
         return "redirect:/user/account";
     }
 
     @GetMapping("/changePassword")
-    public String changePassword(Model model){
+    public String showChangePasswordPage(Model model){
         return "changePassword";
     }
 }

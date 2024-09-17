@@ -10,8 +10,14 @@ import kha.productsdemo.dto.response.ShowUserResponse;
 import kha.productsdemo.entity.Role;
 import kha.productsdemo.entity.User;
 import kha.productsdemo.repository.UserRepository;
+import kha.productsdemo.security.CustomUserDetailService;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,8 +35,9 @@ public class UserService {
     private final ConverterShowUserAccount converterShowUserAccount;
     private final ConverterUpdateProductRequest converterUpdateProductRequest;
     private final ConverterUpdateUserRequest converterUpdateUserRequest;
-
-    public UserService(UserRepository userRepository, CreateUserRequestConverter userRequestConverter, ConverterShowUserResponse converterShowUserResponse, ConverterShowUserAccount converterShowUserAccount, ConverterUpdateProductRequest converterUpdateProductRequest, ConverterUpdateUserRequest converterUpdateUserRequest) {
+    private final CustomUserDetailService customUserDetailService;
+    private final UserDetailsService userDetailsService;
+    public UserService(UserRepository userRepository, CreateUserRequestConverter userRequestConverter, ConverterShowUserResponse converterShowUserResponse, ConverterShowUserAccount converterShowUserAccount, ConverterUpdateProductRequest converterUpdateProductRequest, ConverterUpdateUserRequest converterUpdateUserRequest, CustomUserDetailService customUserDetailService, UserDetailsService userDetailsService) {
         this.userRepository = userRepository;
         this.userRequestConverter = userRequestConverter;
 
@@ -38,6 +45,8 @@ public class UserService {
         this.converterShowUserAccount = converterShowUserAccount;
         this.converterUpdateProductRequest = converterUpdateProductRequest;
         this.converterUpdateUserRequest = converterUpdateUserRequest;
+        this.customUserDetailService = customUserDetailService;
+        this.userDetailsService = userDetailsService;
     }
 
     public void createUser(CreateUserRequest createUserRequest){
@@ -96,10 +105,6 @@ public class UserService {
         return converterShowUserAccount.convertFromUserToShowUserAccount(user);
     }
 
-    public User convertFromUserDetailsToUser(UserDetails userDetails){
-        User user = new User();
-        return user;
-    }
 
     public User findUserByEmail(String email){
         return userRepository.findUserByEmail(email);
@@ -121,11 +126,15 @@ public class UserService {
         return updateUserRequest;
     }
 
-    public void updateUser(UpdateUserRequest from, User to){
+    public User updateUser(UpdateUserRequest from, User to){
         to = converterUpdateUserRequest.convertFromUpdateUserRequestToUser(from, to);
-        userRepository.save(to);
+        return userRepository.save(to);
     }
 
+    public Authentication createNewAuthentication(String username){
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
 
 
 

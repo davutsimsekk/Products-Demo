@@ -27,7 +27,7 @@
 
 <main class="container my-5">
     <h1 class="mb-4">Create New Product</h1>
-    <form th:action="@{/products/createProduct}" th:object="${product}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/admin/createProduct}" th:object="${product}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="name" class="form-label"> Name</label>
             <input type="text" class="form-control"  id="name" th:field="*{name}">

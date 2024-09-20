@@ -1,29 +1,23 @@
 package kha.productsdemo.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
 import jakarta.validation.Valid;
 import kha.productsdemo.dto.request.ChangePasswordRequest;
-import kha.productsdemo.dto.request.UpdateProductRequest;
+
 import kha.productsdemo.dto.request.UpdateUserRequest;
 import kha.productsdemo.dto.response.ShowUserAccount;
 import kha.productsdemo.entity.User;
 import kha.productsdemo.service.UserService;
 import org.springframework.security.core.Authentication;
 
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/user")
@@ -101,5 +95,26 @@ public class UserController {
         }
         userService.changePassword(currentUser, changePasswordRequest);
         return "redirect:/user/account";
+    }
+
+    @GetMapping("/cart")
+    public String showCart(Model model, Authentication authentication){
+        User currentUser = userService.convertFromAuthenticationToUser(authentication);
+        model.addAttribute("basketProducts", currentUser.getCart());
+        model.addAttribute("totalPrice", userService.totalCartPrice());
+        return "showCart";
+    }
+
+
+    @PostMapping("/cart/removeFromCart")
+    public String removeProductFromCart(@RequestParam String productId){
+        userService.deleteProductFromCart(productId);
+        return "redirect:/user/cart";
+    }
+
+    @PostMapping("/cart/updateCart")
+    public String updateProductCartQuantity(@RequestParam String productId, @RequestParam int quantity){
+        userService.updateProductCartQuantity(productId, quantity);
+        return "redirect:/user/cart";
     }
 }

@@ -20,6 +20,12 @@ public class User implements UserDetails {
     private String id;
 
     private String username;
+    @ElementCollection
+    @CollectionTable(name = "user_cart",
+            joinColumns = @JoinColumn(name = "user_id"))
+    @MapKeyJoinColumn(name = "product_id")
+    @Column(name = "quantity")
+    private Map<Product, Integer> cart = new HashMap<>();
 
     @Override
     public boolean equals(Object o) {

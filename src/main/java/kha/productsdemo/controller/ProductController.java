@@ -1,15 +1,10 @@
 package kha.productsdemo.controller;
 
-import jakarta.validation.Valid;
-import kha.productsdemo.dto.request.CreateProductRequest;
-import kha.productsdemo.dto.request.UpdateProductRequest;
 import kha.productsdemo.dto.response.ShowProductResponse;
-import kha.productsdemo.entity.Product;
 import kha.productsdemo.service.ProductService;
+import kha.productsdemo.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +13,10 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
     private final ProductService productService;
-
-    public ProductController(ProductService productService) {
+    private final UserService userService;
+    public ProductController(ProductService productService, UserService userService) {
         this.productService = productService;
+        this.userService = userService;
     }
 
     @GetMapping({"/listProducts", "/listProducts/{sortField}/{sortType}"})
@@ -42,7 +38,7 @@ public class ProductController {
         List<ShowProductResponse> products = productService.findAllProducts(sortField, sortType);
         model.addAttribute("products", products);
         model.addAttribute("sortBy", sortBy);
-        model.addAttribute("basketSize", productService.getCartProductsSize());
+        model.addAttribute("basketSize", userService.getCartProductsSize());
         return "listProducts";
     }
 
@@ -50,33 +46,33 @@ public class ProductController {
     public String showProduct(@PathVariable String id, Model model){
         ShowProductResponse product = productService.findProductById(id);
         model.addAttribute("product", product);
-        model.addAttribute("basketSize", productService.getCartProductsSize());
+        model.addAttribute("basketSize", userService.getCartProductsSize());
         return "showProduct";
     }
 
     @GetMapping("/listProducts/{id}/addToCart")
     public String addProductToCart(@PathVariable String id){
-        productService.addToCart(id);
+        userService.addToCart(id);
         return "redirect:/products/listProducts/{id}";
     }
-    @GetMapping("/cart")
-    public String showCartPage(Model model){
-        model.addAttribute("basketProducts", productService.getCartProducts());
-        model.addAttribute("totalPrice", productService.totalCartPrice());
-
-        return "showCart";
-    }
-
-    @PostMapping("/listProducts/{id}/removeFromCart")
-    public String removeProductFromCart(@RequestParam String productId, @PathVariable String id){
-        productService.deleteProductFromCart(productId);
-        return "redirect:/products/cart";
-    }
-    @PostMapping("/listProducts/{id}/updateCart")
-    public String updateProductCartQuantity(@RequestParam String productId, @RequestParam int quantity, @PathVariable String id){
-        productService.updateProductCartQuantity(productId, quantity);
-        return "redirect:/products/cart";
-    }
+//    @GetMapping("/cart")
+//    public String showCartPage(Model model){
+//        model.addAttribute("basketProducts", productService.getCartProducts());
+//        model.addAttribute("totalPrice", productService.totalCartPrice());
+//
+//        return "showCart";
+//    }
+//
+//    @PostMapping("/listProducts/{id}/removeFromCart")
+//    public String removeProductFromCart(@RequestParam String productId, @PathVariable String id){
+//        userService.deleteProductFromCart(productId);
+//        return "redirect:/products/cart";
+//    }
+//    @PostMapping("/listProducts/{id}/updateCart")
+//    public String updateProductCartQuantity(@RequestParam String productId, @RequestParam int quantity, @PathVariable String id){
+//        userService.updateProductCartQuantity(productId, quantity);
+//        return "redirect:/products/cart";
+//    }
 
 
 }

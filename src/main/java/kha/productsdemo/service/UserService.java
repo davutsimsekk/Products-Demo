@@ -8,6 +8,7 @@ import kha.productsdemo.dto.request.UpdateProductRequest;
 import kha.productsdemo.dto.request.UpdateUserRequest;
 import kha.productsdemo.dto.response.ShowUserAccount;
 import kha.productsdemo.dto.response.ShowUserResponse;
+import kha.productsdemo.entity.Product;
 import kha.productsdemo.entity.Role;
 import kha.productsdemo.entity.User;
 import kha.productsdemo.repository.UserRepository;
@@ -38,7 +39,8 @@ public class UserService {
     private final ConverterUpdateUserRequest converterUpdateUserRequest;
     private final CustomUserDetailService customUserDetailService;
     private final UserDetailsService userDetailsService;
-    public UserService(UserRepository userRepository, CreateUserRequestConverter userRequestConverter, ConverterShowUserResponse converterShowUserResponse, ConverterShowUserAccount converterShowUserAccount, ConverterUpdateProductRequest converterUpdateProductRequest, ConverterUpdateUserRequest converterUpdateUserRequest, CustomUserDetailService customUserDetailService, UserDetailsService userDetailsService) {
+    private final CartService cartService;
+    public UserService(UserRepository userRepository, CreateUserRequestConverter userRequestConverter, ConverterShowUserResponse converterShowUserResponse, ConverterShowUserAccount converterShowUserAccount, ConverterUpdateProductRequest converterUpdateProductRequest, ConverterUpdateUserRequest converterUpdateUserRequest, CustomUserDetailService customUserDetailService, UserDetailsService userDetailsService, CartService cartService) {
         this.userRepository = userRepository;
         this.userRequestConverter = userRequestConverter;
 
@@ -48,6 +50,7 @@ public class UserService {
         this.converterUpdateUserRequest = converterUpdateUserRequest;
         this.customUserDetailService = customUserDetailService;
         this.userDetailsService = userDetailsService;
+        this.cartService = cartService;
     }
 
     public void createUser(CreateUserRequest createUserRequest){
@@ -148,8 +151,33 @@ public class UserService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
     }
+    public void saveUser(User user){
+        userRepository.save(user);
+    }
 
+    public void addToCart(String productId){
+        cartService.addToCart(productId);
+    }
 
+    public void deleteProductFromCart(String productId){
+        cartService.deleteProductFromCart(productId);
+    }
+
+    public Integer getCartProductsSize(){
+        return cartService.getCartProductsSize();
+    }
+
+    public double totalCartPrice(){
+        return cartService.totalCartPrice();
+    }
+
+    public void updateProductCartQuantity(String productId, int quantity){
+        cartService.updateProductCartQuantity(productId, quantity);
+    }
+
+    public Map<Product, Integer> getCartProducts(){
+        return cartService.getCartProducts();
+    }
 
 
 

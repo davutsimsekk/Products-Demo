@@ -17,9 +17,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfiguration {
 
     private final UserDetailsService userDetailsService;
-
-    public SecurityConfiguration(UserDetailsService userDetailsService) {
+    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+    public SecurityConfiguration(UserDetailsService userDetailsService, CustomAuthenticationSuccessHandler authenticationSuccessHandler) {
         this.userDetailsService = userDetailsService;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
     }
 
     @Bean
@@ -43,6 +44,7 @@ public class SecurityConfiguration {
                         .loginPage("/login")
                         .usernameParameter("email")
                         .defaultSuccessUrl("/home", true)
+                        .successHandler(authenticationSuccessHandler)
                         .permitAll()
                 )
                 .logout(

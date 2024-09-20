@@ -1,6 +1,5 @@
 package kha.productsdemo.service;
 
-import kha.productsdemo.dto.response.ShowProductResponse;
 import kha.productsdemo.entity.Product;
 import kha.productsdemo.entity.User;
 import kha.productsdemo.repository.UserRepository;
@@ -127,5 +126,9 @@ public User isAuthentication() {
                 }
             }
         }
+    }
+
+    public Map<Product, Integer> getDefaultCart(){
+        return cart;
     }
 }

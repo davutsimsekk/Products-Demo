@@ -4,7 +4,6 @@ package kha.productsdemo.service;
 import kha.productsdemo.dto.converter.*;
 import kha.productsdemo.dto.request.ChangePasswordRequest;
 import kha.productsdemo.dto.request.CreateUserRequest;
-import kha.productsdemo.dto.request.UpdateProductRequest;
 import kha.productsdemo.dto.request.UpdateUserRequest;
 import kha.productsdemo.dto.response.ShowUserAccount;
 import kha.productsdemo.dto.response.ShowUserResponse;
@@ -15,15 +14,13 @@ import kha.productsdemo.repository.UserRepository;
 import kha.productsdemo.security.CustomUserDetailService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -179,6 +176,15 @@ public class UserService {
         return cartService.getCartProducts();
     }
 
+    public Map<Product, Integer> getDefaultCart(){
+        return cartService.getDefaultCart();
+    }
 
+    @Transactional(readOnly = true)
+    public User getUserWithCart(Authentication authentication) {
+        User user = convertFromAuthenticationToUser(authentication);
+        user.getCart().size(); // This will force the initialization of the cart
+        return user;
+    }
 
 }

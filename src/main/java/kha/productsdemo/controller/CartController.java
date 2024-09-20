@@ -21,8 +21,8 @@ public class CartController {
 
     @GetMapping({"","/"})
     public String showCart(Model model, Authentication authentication){
-        User currentUser = userService.convertFromAuthenticationToUser(authentication);
-        model.addAttribute("basketProducts", currentUser.getCart());
+
+        model.addAttribute("basketProducts", userService.getCartProducts());
         model.addAttribute("totalPrice", userService.totalCartPrice());
         return "showCart";
     }

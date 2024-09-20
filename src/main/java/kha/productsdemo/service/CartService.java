@@ -117,5 +117,15 @@ public User isAuthentication() {
             }
             userRepository.save(user);
         }
+        else {
+            if (cart.containsKey(product)){
+                if (quantity > 0){
+                    cart.put(product, quantity);
+                }
+                else {
+                    cart.remove(product);
+                }
+            }
+        }
     }
 }

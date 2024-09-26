@@ -81,24 +81,68 @@
                     <a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin/createProduct" class="btn btn-primary">Create Product</a>
                 </div>
             </div>
-            <div class="dropdown mb-3">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span th:text="${sortBy}">Sort by Name(A-Z)</span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="/products/listProducts/price/asc" data-sort="price-asc">Low to High</a></li>
-                    <li><a class="dropdown-item" href="/products/listProducts/price/desc" data-sort="price-desc">High to Low</a></li>
-                    <li><a class="dropdown-item" href="/products/listProducts/name/asc" data-sort="name-asc">According to Name (A-Z)</a></li>
-                    <li><a class="dropdown-item" href="/products/listProducts/name/desc" data-sort="name-desc">According to Name (Z-A)</a></li>
-                </ul>
-            </div>
+<!--            <div class="dropdown mb-3">-->
+<!--                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonSortType" data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--                    <span th:text="${sortBy}">Sort by Name(A-Z)</span>-->
+<!--                </button>-->
+<!--                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="price-asc">Low to High</a></li>-->
+<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="price-desc">High to Low</a></li>-->
+<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="name-asc">According to Name (A-Z)</a></li>-->
+<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="name-desc">According to Name (Z-A)</a></li>-->
+<!--                </ul>-->
+<!--                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonProductCount" data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--                    <span th:text="${productCount}">50</span>-->
+<!--                </button>-->
+<!--                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
+<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="price-asc">10</a></li>-->
+<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="price-desc">20</a></li>-->
+<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="name-asc">50</a></li>-->
+<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="name-desc">100</a></li>-->
+<!--                </ul>-->
+<!--            </div>-->
+
+            <form th:action="@{/products/listProducts}" method="get" class="mb-3">
+                <div class="row align-items-center">
+                    <!-- Sort By Section -->
+                    <div class="col-auto">
+                        <label for="sort" class="col-form-label">Sort by:</label>
+                    </div>
+                    <div class="col-auto">
+                        <select id="sort" name="sort" class="form-select" onchange="this.form.submit()">
+                            <option th:each="option : ${sortOptions}"
+                                    th:value="${option.value}"
+                                    th:text="${option.displayName}"
+                                    th:selected="${option.value == currentSort}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Count Section -->
+                    <div class="col-auto">
+                        <label for="productCount" class="col-form-label">Count:</label>
+                    </div>
+                    <div class="col-auto" style="max-width: 100px;">
+                        <select id="productCount" name="productCount" class="form-select" onchange="this.form.submit()">
+                            <option th:each="productCount : ${productCounts}"
+                                    th:value="${productCount}"
+                                    th:text="${productCount}"
+                                    th:selected="${productCount == currentCount}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+
+
+
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <div class="col" th:each="product : ${products}">
                     <div class="card shadow-sm">
                         <img th:src="@{'/productImages/' + ${product.imageName}}" class="card-img-top" alt="Product Image">
                         <div class="card-body">
                             <h5 class="card-title" th:text="${product.name}">Product Name</h5>
-                            <p class="card-text" th:text="${product.description}">Product Description</p>
+<!--                            <p class="card-text" th:text="${product.description}">Product Description</p>-->
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="btn-group">
                                     <a th:href="@{'/products/listProducts/' + ${product.id}}" class="btn btn-sm btn-outline-secondary">Show Product</a>
@@ -113,7 +157,25 @@
                 </div>
             </div>
         </div>
+
     </div>
+    <nav aria-label="Navigation Page" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                <a class="page-link" th:href="@{/products/listProducts(pageNum=${currentPage - 1}, productCount=${currentCount}, sort=${currentSort})}" tabindex="-1" th:aria-disabled="${currentPage == 1}">Previous</a>
+            </li>
+            <li class="page-item" th:each="pageNum : ${#numbers.sequence(1, totalPages)}"
+                th:classappend="${pageNum == currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/products/listProducts(pageNum=${pageNum}, productCount=${currentCount}, sort=${currentSort})}" th:text="${pageNum}"
+                   th:aria-current="${pageNum == currentPage} ? 'page'"></a>
+            </li>
+            <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                <a class="page-link" th:href="@{/products/listProducts(pageNum=${currentPage + 1}, productCount=${currentCount}, sort=${currentSort})}" th:aria-disabled="${currentPage == totalPages}">Next</a>
+            </li>
+        </ul>
+    </nav>
+
+
 </main>
 
 <footer class="text-muted py-5">

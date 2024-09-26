@@ -8,6 +8,7 @@ import kha.productsdemo.dto.request.UpdateProductRequest;
 import kha.productsdemo.dto.response.ShowProductResponse;
 import kha.productsdemo.entity.Product;
 import kha.productsdemo.exception.ProductNotFoundException;
+import kha.productsdemo.repository.ProductPagingRepository;
 import kha.productsdemo.repository.ProductRepository;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,10 +27,11 @@ public class ProductService {
     private final ConverterShowProductConverter converterShowProductConverter;
     private final ConverterUpdateProductRequest converterUpdateProductRequest;
     private final ImageService imageService;
+    private final ProductPagingRepository productPagingRepository;
     public ProductService(ProductRepository productRepository,
                           ConverterCreateProductsRequest converterCreateProductsRequest,
                           ConverterShowProductConverter converterShowProductConverter,
-                          ConverterUpdateProductRequest converterUpdateProductRequest, ImageService imageService) {
+                          ConverterUpdateProductRequest converterUpdateProductRequest, ImageService imageService, ProductPagingRepository productPagingRepository) {
         this.productRepository = productRepository;
         this.converterCreateProductsRequest = converterCreateProductsRequest;
         this.converterShowProductConverter = converterShowProductConverter;
@@ -37,6 +39,7 @@ public class ProductService {
         this.converterUpdateProductRequest = converterUpdateProductRequest;
 
         this.imageService = imageService;
+        this.productPagingRepository = productPagingRepository;
     }
     public ShowProductResponse createProduct(CreateProductRequest request){
         Product product = converterCreateProductsRequest
@@ -132,6 +135,14 @@ public class ProductService {
             }
         }
     }
+
+    public ShowProductResponse convertFromProductToShowProductResponse(Product product){
+        return converterShowProductConverter.convertFromProductToShowProductResponse(product);
+    }
+    public long countOfAllProducts(){
+        return productRepository.count();
+    }
+
 
 
 

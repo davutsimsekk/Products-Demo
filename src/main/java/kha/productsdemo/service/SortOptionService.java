@@ -9,7 +9,6 @@ public class SortOptionService {
         String[] values = sort.split("-");
         String sortType = values[1];
         String sortField = values[0];
-        System.out.println(sortType + " " + sortField);
         return (sortType.equals("asc")) ? Sort.by(Sort.Direction.ASC, sortField)
                 : Sort.by(Sort.Direction.DESC, sortField);
 

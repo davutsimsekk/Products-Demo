@@ -1,15 +1,26 @@
 Basically, it is a website where CRUD operations are performed on products, you can perform operations such as product creation, product deletion, product update, and add products to the cart.
 It is made using Java and spring boot. I used MYSQL for the database. I used the Thyemeleaf dependency for the interface design.
 
-What types of transactions can be made on this site?
-*Create an account
-*Login
-*Cart operations(add to cart, delete product from cart, update product quantity on cart)
-*Admin operations(create product, delete product, update product, show userList, reorganize user Roles, making user to admin, delete User)
-*List Products
-*Sorting Operations(While listening Products user choose an option like Low Price to High Price, A-Z)
-*Paging Operations(user can choose how many products to show)
-*Update User Details(user can update details and user can change password)
+* Create an account
+* Login
+* Cart operations:
+  - Add to cart
+  - Delete product from cart
+  - Update product quantity in cart
+* Admin operations:
+  - Create product
+  - Delete product
+  - Update product
+  - Show user list
+  - Reorganize user roles
+  - Promote user to admin
+  - Delete user
+* List products
+* Sorting operations (e.g., Low Price to High Price, A-Z)
+* Paging operations (user can choose how many products to show)
+* Update user details:
+  - Update account details
+  - Change password
 
 
 Listing Products

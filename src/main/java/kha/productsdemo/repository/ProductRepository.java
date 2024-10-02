@@ -10,6 +10,4 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     Optional<Product> findProductByName(String name);
     Optional<Product> findProductById(String id);
 
-
-
 }

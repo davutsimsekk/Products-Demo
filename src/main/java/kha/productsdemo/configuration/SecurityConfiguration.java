@@ -29,14 +29,12 @@ public class SecurityConfiguration {
                 .csrf(csrf-> csrf.disable())
                 .cors(cors-> cors.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/products/**",
-                                "/home", "/register/**",  "/css/**", "/js/**")
-                        .permitAll()
+
+                        .requestMatchers("/products/**", "/home", "/register/**", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/productImages/**").permitAll()
                         .requestMatchers("/register").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/user/cart/**").permitAll()
-                        .requestMatchers("/public/productImages/**").permitAll()
                         .requestMatchers("/cart/**").permitAll()
                         .anyRequest().authenticated()
                 )

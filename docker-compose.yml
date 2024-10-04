@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build: ./
+    ports:
+      - "8080:8080"
+    environment:
+      MYSQL_URL: jdbc:mysql://db:3306/springsecurity
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: dockerPassword
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: springsecurity
+      MYSQL_ROOT_PASSWORD: dockerPassword
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p${MYSQL_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  mysql-data:

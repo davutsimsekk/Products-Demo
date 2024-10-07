@@ -10,6 +10,7 @@ import kha.productsdemo.dto.response.ShowUserResponse;
 import kha.productsdemo.entity.Product;
 import kha.productsdemo.entity.Role;
 import kha.productsdemo.entity.User;
+import kha.productsdemo.repository.ProductRepository;
 import kha.productsdemo.repository.UserRepository;
 import kha.productsdemo.security.CustomUserDetailService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +38,8 @@ public class UserService {
     private final CustomUserDetailService customUserDetailService;
     private final UserDetailsService userDetailsService;
     private final CartService cartService;
-    public UserService(UserRepository userRepository, CreateUserRequestConverter userRequestConverter, ConverterShowUserResponse converterShowUserResponse, ConverterShowUserAccount converterShowUserAccount, ConverterUpdateProductRequest converterUpdateProductRequest, ConverterUpdateUserRequest converterUpdateUserRequest, CustomUserDetailService customUserDetailService, UserDetailsService userDetailsService, CartService cartService) {
+    private final FavoriteListService favoriteListService;
+    public UserService(UserRepository userRepository, CreateUserRequestConverter userRequestConverter, ConverterShowUserResponse converterShowUserResponse, ConverterShowUserAccount converterShowUserAccount, ConverterUpdateProductRequest converterUpdateProductRequest, ConverterUpdateUserRequest converterUpdateUserRequest, CustomUserDetailService customUserDetailService, UserDetailsService userDetailsService, CartService cartService, FavoriteListService favoriteListService) {
         this.userRepository = userRepository;
         this.userRequestConverter = userRequestConverter;
 
@@ -48,6 +50,7 @@ public class UserService {
         this.customUserDetailService = customUserDetailService;
         this.userDetailsService = userDetailsService;
         this.cartService = cartService;
+        this.favoriteListService = favoriteListService;
     }
 
     public void createUser(CreateUserRequest createUserRequest){
@@ -186,5 +189,20 @@ public class UserService {
         user.getCart().size(); // This will force the initialization of the cart
         return user;
     }
+
+    public void addProductToFavoriteList(String productId){
+        favoriteListService.addProductToFavoriteList(productId);
+    }
+
+    public void removeProductFromFavoriteList(String productId){
+        favoriteListService.removeProductFromFavoriteList(productId);
+    }
+
+    public Set<Product> showFavoriteList(){
+        return favoriteListService.getFavoriteProducts();
+    }
+
+
+
 
 }

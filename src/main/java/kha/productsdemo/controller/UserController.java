@@ -117,4 +117,18 @@ public class UserController {
         userService.updateProductCartQuantity(productId, quantity);
         return "redirect:/user/cart";
     }
+
+    @GetMapping("/favoriteList")
+    public String showFavoriteList(Model model, Authentication authentication){
+        User currentUser = userService.convertFromAuthenticationToUser(authentication);
+        model.addAttribute("favoriteList", currentUser.getFavoriteList());
+        return "favoriteList";
+    }
+
+    @PostMapping("/favoriteList/remevoProduct")
+    public String removeProductFromFavoriteList(@RequestParam String productId){
+        userService.removeProductFromFavoriteList(productId);
+        return "redirect:/user/favoriteList";
+    }
+
 }

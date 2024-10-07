@@ -24,16 +24,7 @@ public class CartService {
     }
 
 
-//    public User isAuthentication(){
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if(authentication != null && authentication.isAuthenticated()){
-//            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//            String email = userDetails.getUsername();
-//            User user = userRepository.findUserByEmail(email);
-//            return user;
-//        }
-//        return null;
-//    }
+
 public User isAuthentication() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     if (authentication != null && authentication.isAuthenticated() &&

@@ -49,6 +49,10 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "favorite_list_id", referencedColumnName = "id")
+    private FavoriteList favoriteList;
+
     @Override
     public String getPassword(){
         return this.password;

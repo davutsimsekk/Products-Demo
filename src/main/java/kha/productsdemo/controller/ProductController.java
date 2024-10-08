@@ -88,7 +88,7 @@ public class ProductController {
         return "redirect:/products/listProducts/{id}";
     }
 
-    @GetMapping("/listProducts/{id}/addToCart")
+    @GetMapping("/listProducts/{id}/addToFavoriteList")
     public String addProductToFavoriteList(@PathVariable String id){
         userService.addProductToFavoriteList(id);
         return "redirect:/products/listProducts/{id}";

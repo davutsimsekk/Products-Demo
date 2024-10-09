@@ -18,59 +18,43 @@ public class ProductController {
     private final ProductService productService;
     private final UserService userService;
     private final ProductPagingService productPagingService;
+    private String local_sort = "price-asc";
+    private Integer local_pageNum = 1;
+    private Integer local_productCount = 10;
     public ProductController(ProductService productService, UserService userService, ProductPagingService productPagingService) {
         this.productService = productService;
         this.userService = userService;
         this.productPagingService = productPagingService;
     }
 
-//    @GetMapping({"/listProducts", "/listProducts/{sortField}/{sortType}"})
-//    public String findAllProducts(
-//            @PathVariable(required = false) String sortField,
-//            @PathVariable(required = false) String sortType,
-//            @PathVariable(required = false) Integer startIndex,
-//            @PathVariable(required = false) Integer productCount,
-//            Model model) {
-//
-//        sortField = (sortField != null) ? sortField : "name";
-//        sortType = (sortType != null) ? sortType : "asc";
-//        startIndex = (startIndex != null) ? startIndex : 0;
-//        productCount= (productCount != null) ? productCount : 50;
-//        String sortBy = "";
-//        if ("price".equals(sortField)) {
-//            sortBy = "price".equals(sortField) ?
-//                    ("asc".equals(sortType) ? "Low to High" : "High to Low") : "";
-//        } else if ("name".equals(sortField)) {
-//            sortBy = "name".equals(sortField) ?
-//                    ("asc".equals(sortType) ? "According to Name (A-Z)" : "According to Name (Z-A)") : "";
-//        }
-////        List<ShowProductResponse> products = productService.findAllProducts(sortField, sortType);
-//        List<ShowProductResponse> products = productPagingService.getProducts(startIndex, productCount, sortField, sortType);
-//        model.addAttribute("products", products);
-//        model.addAttribute("sortBy", sortBy);
-//        model.addAttribute("basketSize", userService.getCartProductsSize());
-//        model.addAttribute("productCount", productCount);
-//        return "listProducts";
-//    }
-
     @GetMapping("/listProducts")
     public String findAllProducts(
-            @RequestParam(defaultValue = "price-asc") String sort,
-            @RequestParam(defaultValue = "1") int pageNum,
-            @RequestParam(defaultValue = "10") int productCount,
+            @RequestParam(required = false) String sort,
+            @RequestParam(required = false) Integer pageNum,
+            @RequestParam(required = false) Integer productCount,
             Model model) {
+        if(sort != null){
+            this.local_sort = sort;
+        }
+        if(productCount != null){
+            this.local_productCount = productCount;
+        }
+        if(pageNum != null){
+            this.local_pageNum = pageNum;
+        }
+
         long productCounts = productService.countOfAllProducts();
-        double value = (double) productCounts / productCount;
+        double value = (double) productCounts / local_productCount;
         int totalPages = (int) Math.ceil(value);
-        List<ShowProductResponse> products = productPagingService.getProducts(pageNum - 1, productCount, sort);
+        List<ShowProductResponse> products = productPagingService.getProducts(local_pageNum - 1, local_productCount, local_sort);
         model.addAttribute("products", products);
-        model.addAttribute("currentSort", sort);
+        model.addAttribute("currentSort", local_sort);
         model.addAttribute("basketSize", userService.getCartProductsSize());
         model.addAttribute("productCounts", new ProductCounts().getProductCounts());
         model.addAttribute("sortOptions", SortOption.values());
-        model.addAttribute("currentCount", productCount);
+        model.addAttribute("currentCount", local_productCount);
         model.addAttribute("totalPages", totalPages);
-        model.addAttribute("currentPage", pageNum);
+        model.addAttribute("currentPage", local_pageNum);
         return "listProducts";
     }
 

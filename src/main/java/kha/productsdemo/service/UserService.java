@@ -54,6 +54,7 @@ public class UserService {
     }
 
     public void createUser(CreateUserRequest createUserRequest){
+
         User user = userRequestConverter.convertFromCreateUserRequestToUser(createUserRequest);
         user.setRoles(Collections.singleton(Role.ROLE_USER));
         userRepository.save(user);

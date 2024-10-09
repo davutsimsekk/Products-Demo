@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import kha.productsdemo.validation.interfaces.EmailIsExist;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class CreateUserRequest {
     @NotEmpty
     private String userName;
     @NotEmpty
+    @EmailIsExist
     private String email;
     @Size(min = 6, max = 20)
     private String password;

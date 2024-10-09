@@ -52,7 +52,45 @@
         .btn-group {
             margin-top: 10px;
         }
+        .favorite-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #ccc;
+            transition: color 0.3s ease;
+        }
+        .favorite-icon:hover {
+            color: #ff4d4d;
+        }
+        .favorite-icon.active {
+            color: #ff4d4d;
+        }
+        .product-card {
+            position: relative;
+            overflow: hidden;
+        }
 
+        .favorite-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #ff4d4d;
+            text-decoration: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .product-card:hover .favorite-icon {
+            opacity: 1;
+        }
+
+        .favorite-icon:hover {
+            color: #ff1a1a;
+        }
     </style>
 </head>
 <body>
@@ -107,26 +145,6 @@
                     <a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin/createProduct" class="btn btn-primary">Create Product</a>
                 </div>
             </div>
-<!--            <div class="dropdown mb-3">-->
-<!--                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonSortType" data-bs-toggle="dropdown" aria-expanded="false">-->
-<!--                    <span th:text="${sortBy}">Sort by Name(A-Z)</span>-->
-<!--                </button>-->
-<!--                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
-<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="price-asc">Low to High</a></li>-->
-<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="price-desc">High to Low</a></li>-->
-<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="name-asc">According to Name (A-Z)</a></li>-->
-<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="name-desc">According to Name (Z-A)</a></li>-->
-<!--                </ul>-->
-<!--                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonProductCount" data-bs-toggle="dropdown" aria-expanded="false">-->
-<!--                    <span th:text="${productCount}">50</span>-->
-<!--                </button>-->
-<!--                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">-->
-<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="price-asc">10</a></li>-->
-<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="price-desc">20</a></li>-->
-<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="name-asc">50</a></li>-->
-<!--                    <li><a class="dropdown-item" href="/products/listProducts" data-sort="name-desc">100</a></li>-->
-<!--                </ul>-->
-<!--            </div>-->
 
             <form th:action="@{/products/listProducts}" method="get" class="mb-3">
                 <div class="row align-items-center">
@@ -164,8 +182,14 @@
 
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <div class="col" th:each="product : ${products}">
-                    <div class="card shadow-sm h-100">
-                        <img th:src="@{/productImages/{imageName}(imageName=${product.imageName})}" class="card-img-top" alt="Product Image">
+                    <div class="card shadow-sm h-100 product-card">
+<!--                        <img th:src="@{/productImages/{imageName}(imageName=${product.imageName})}" class="card-img-top" alt="Product Image">-->
+                        <div class="position-relative">
+                            <img th:src="@{/productImages/{imageName}(imageName=${product.imageName})}" class="card-img-top" alt="Product Image">
+                            <a th:href="@{'/products/listProducts/' + ${product.id} + '/addToFavoriteList'}" class="favorite-icon">
+                                <i class="bi bi-heart"></i>
+                            </a>
+                        </div>
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title" th:text="${product.name}">Product Name</h5>
                             <!-- <p class="card-text" th:text="${product.description}">Product Description</p> -->

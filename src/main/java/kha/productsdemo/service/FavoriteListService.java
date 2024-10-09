@@ -1,6 +1,7 @@
 package kha.productsdemo.service;
 
 import kha.productsdemo.core.AuthenticationOperations;
+import kha.productsdemo.entity.FavoriteList;
 import kha.productsdemo.entity.Product;
 import kha.productsdemo.entity.User;
 import org.springframework.stereotype.Service;
@@ -16,12 +17,30 @@ public class FavoriteListService {
         this.productService = productService;
     }
 
+    public void favoriteListExists(User user) {
+        if (user.getFavoriteList() == null) {
+            user.setFavoriteList(new FavoriteList());
+        }
+    }
+
+    public boolean productExists(Product product) {
+        User user = authenticationOperations.isAuthentication();
+        if (user == null) {
+            return false;
+        }
+        else {
+            favoriteListExists(user);
+            return user.getFavoriteList().getProducts().contains(product);
+        }
+    }
+
     public Set<Product> getFavoriteProducts() {
         User user = authenticationOperations.isAuthentication();
         if (user == null) {
             return null;
         }
         else {
+            favoriteListExists(user);
             return user.getFavoriteList().getProducts();
         }
     }
@@ -33,7 +52,8 @@ public class FavoriteListService {
             return;
         }
         else {
-            user.getFavoriteList().addProduct(product);
+            favoriteListExists(user);
+            user.getFavoriteList().getProducts().add(product);
         }
     }
 
@@ -44,7 +64,10 @@ public class FavoriteListService {
             return;
         }
         else {
-            user.getFavoriteList().removeProduct(product);
+            favoriteListExists(user);
+            if(productExists(product)) {
+                user.getFavoriteList().getProducts().remove(product);
+            }
         }
     }
 }

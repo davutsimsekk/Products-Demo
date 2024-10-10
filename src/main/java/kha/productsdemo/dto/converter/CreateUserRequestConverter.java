@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 @Component
 public class CreateUserRequestConverter {
@@ -22,6 +23,8 @@ public class CreateUserRequestConverter {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setFavoriteList(new FavoriteList());
+        user.getFavoriteList().setProducts(new HashSet<>());
+
         return user;
     }
 }

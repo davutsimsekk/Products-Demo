@@ -6,6 +6,7 @@ import kha.productsdemo.dto.request.ChangePasswordRequest;
 
 import kha.productsdemo.dto.request.UpdateUserRequest;
 import kha.productsdemo.dto.response.ShowUserAccount;
+import kha.productsdemo.entity.Product;
 import kha.productsdemo.entity.User;
 import kha.productsdemo.service.UserService;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 @Controller
 @RequestMapping("/user")
@@ -120,11 +123,12 @@ public class UserController {
     @GetMapping("/favoriteList")
     public String showFavoriteList(Model model, Authentication authentication){
         User currentUser = userService.convertFromAuthenticationToUser(authentication);
-        model.addAttribute("favoriteList", currentUser.getFavoriteList());
+        Set<Product> products = currentUser.getFavoriteList().getProducts();
+        model.addAttribute("favoriteProducts", products);
         return "favoriteList";
     }
 
-    @PostMapping("/favoriteList/remevoProduct")
+    @PostMapping("/favoriteList/removeProduct")
     public String removeProductFromFavoriteList(@RequestParam String productId){
         userService.removeProductFromFavoriteList(productId);
         return "redirect:/user/favoriteList";

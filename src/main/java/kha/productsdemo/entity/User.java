@@ -53,6 +53,14 @@ public class User implements UserDetails {
     @JoinColumn(name = "favorite_list_id", referencedColumnName = "id")
     private FavoriteList favoriteList;
 
+    public FavoriteList getFavoriteList(){
+        if(favoriteList == null){
+            favoriteList = new FavoriteList();
+        }
+        return favoriteList;
+    }
+
+
     @Override
     public String getPassword(){
         return this.password;

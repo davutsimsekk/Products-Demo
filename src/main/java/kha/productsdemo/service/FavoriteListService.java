@@ -4,22 +4,30 @@ import kha.productsdemo.core.AuthenticationOperations;
 import kha.productsdemo.entity.FavoriteList;
 import kha.productsdemo.entity.Product;
 import kha.productsdemo.entity.User;
+import kha.productsdemo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
 public class FavoriteListService {
     private final AuthenticationOperations authenticationOperations;
     private final ProductService productService;
-    public FavoriteListService(AuthenticationOperations authenticationOperations, ProductService productService) {
+    private final UserRepository userRepository;
+    public FavoriteListService(AuthenticationOperations authenticationOperations, ProductService productService, UserRepository userRepository) {
         this.authenticationOperations = authenticationOperations;
         this.productService = productService;
+
+        this.userRepository = userRepository;
     }
 
     public void favoriteListExists(User user) {
         if (user.getFavoriteList() == null) {
             user.setFavoriteList(new FavoriteList());
+            user.getFavoriteList().setProducts(new HashSet<>());
+            userRepository.save(user);
+            System.out.println("new favorite list created");
         }
     }
 
@@ -52,9 +60,12 @@ public class FavoriteListService {
             return;
         }
         else {
+
             favoriteListExists(user);
-            user.getFavoriteList().getProducts().add(product);
+            user.getFavoriteList().addProduct(product);
+            userRepository.save(user);
         }
+
     }
 
     public void removeProductFromFavoriteList(String productId) {
@@ -66,7 +77,8 @@ public class FavoriteListService {
         else {
             favoriteListExists(user);
             if(productExists(product)) {
-                user.getFavoriteList().getProducts().remove(product);
+                user.getFavoriteList().removeProduct(product);
+                userRepository.save(user);
             }
         }
     }

@@ -19,7 +19,7 @@ public class FavoriteList {
     private String id;
 
     @ManyToMany
-    private Set<Product> products = new HashSet<>();
+    private Set<Product> products;
 
 //    @OneToOne(mappedBy = "favoriteList")
 //    private User user;
@@ -30,4 +30,5 @@ public class FavoriteList {
     public void removeProduct(Product product) {
         products.remove(product);
     }
+
 }

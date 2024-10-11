@@ -29,6 +29,9 @@ public class FavoriteListService {
             userRepository.save(user);
             System.out.println("new favorite list created");
         }
+        if (user.getFavoriteList().getProducts() == null) {
+            user.getFavoriteList().setProducts(new HashSet<>());
+        }
     }
 
     public boolean productExists(Product product) {
